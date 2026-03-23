@@ -7,24 +7,20 @@
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
         body { background-color: #0e1621; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .card { background: #17212b; padding: 25px; border-radius: 20px; width: 350px; border: 1px solid #242f3d; box-shadow: 0 20px 40px rgba(0,0,0,0.7); text-align: center; position: relative; }
-        h2 { color: #24a1de; font-size: 20px; margin-bottom: 20px; }
-        .input-group { text-align: left; margin-bottom: 20px; position: relative; }
-        label { font-size: 11px; color: #818d99; text-transform: uppercase; margin-left: 5px; }
-        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #242f3d; background: #242f3d; color: white; box-sizing: border-box; outline: none; margin-top: 5px; transition: 0.3s; }
+        .card { background: #17212b; padding: 30px; border-radius: 20px; width: 340px; border: 1px solid #242f3d; box-shadow: 0 20px 40px rgba(0,0,0,0.7); text-align: center; }
+        h2 { color: #24a1de; font-size: 22px; margin-bottom: 5px; }
+        p.subtitle { color: #818d99; font-size: 12px; margin-bottom: 25px; }
+        .input-group { text-align: left; margin-bottom: 18px; position: relative; }
+        label { display: block; color: #abaeb2; font-size: 11px; margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #242f3d; background: #242f3d; color: white; box-sizing: border-box; outline: none; font-weight: bold; transition: 0.3s; }
         input.error { border-color: #ef5350; background: rgba(239, 83, 80, 0.05); }
-        .error-msg { color: #ef5350; font-size: 10px; margin-top: 4px; display: none; font-weight: bold; }
+        .error-msg { color: #ef5350; font-size: 10px; margin-top: 5px; display: none; font-weight: bold; }
+        .price-tag { font-size: 32px; font-weight: bold; margin: 25px 0; color: #ffffff; }
+        .price-tag span { font-size: 18px; color: #24a1de; margin-left: 5px; }
+        #ton-connect { display: flex; justify-content: center; margin-bottom: 20px; }
+        .btn-buy { background: linear-gradient(90deg, #24a1de, #0088cc); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(36, 161, 222, 0.3); }
+        .promo-badge { background: rgba(36, 161, 222, 0.1); color: #24a1de; padding: 5px 10px; border-radius: 5px; font-size: 11px; margin-top: 15px; display: inline-block; font-weight: bold; }
         
-        .package-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-        .package-item { background: #242f3d; padding: 15px; border-radius: 12px; cursor: pointer; border: 2px solid transparent; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; position: relative; }
-        .package-item.active { border-color: #24a1de; background: rgba(36, 161, 222, 0.1); }
-        .pkg-price { font-weight: bold; color: #24a1de; font-size: 16px; }
-
-        #ton-connect { margin-bottom: 20px; }
-        .btn-buy { background: linear-gradient(90deg, #24a1de, #0088cc); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .btn-buy:active { transform: scale(0.98); }
-        
-        /* تأثير الاهتزاز عند الخطأ */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -36,101 +32,88 @@
 <body>
 
     <div class="card" id="mainCard">
-        <h2>💎 Institutional Terminal</h2>
+        <h2>💎 Stars Terminal</h2>
+        <p class="subtitle">Direct Institutional Liquidity</p>
         
         <div id="ton-connect"></div>
 
         <div class="input-group">
-            <label>Recipient Username / ID</label>
+            <label>Recipient ID</label>
             <input type="text" placeholder="@username" id="userInput">
             <div id="userError" class="error-msg">⚠️ ID required for delivery validation</div>
         </div>
-
-        <div class="package-list">
-            <div class="package-item active" id="pkg1" onclick="selectPkg('pkg1', 11.00, 1000)">
-                <div class="pkg-info"><b>1,000 Stars</b><br><small style="color:#818d99">Flash Sale -35%</small></div>
-                <div class="pkg-price">11.00 TON</div>
-            </div>
-            <div class="package-item" id="pkg2" onclick="selectPkg('pkg2', 52.50, 5000)">
-                <div class="pkg-info"><b>5,000 Stars</b><br><small style="color:#818d99">Priority Delivery</small></div>
-                <div class="pkg-price">52.50 TON</div>
-            </div>
-            <div class="input-group" style="margin-top: 10px;">
-                <label>Custom Quantity (Min: 500)</label>
-                <input type="number" placeholder="Enter amount" id="customInput" oninput="validateCustom()">
-                <div id="amountError" class="error-msg">⚠️ Minimum threshold: 500 Stars</div>
-            </div>
+        
+        <div class="input-group">
+            <label>Star Quantity (Min: 500)</label>
+            <input type="number" id="starsInput" value="1500" min="500" oninput="updatePrice()">
+            <div id="amountError" class="error-msg">⚠️ Minimum purchase threshold: 500 Stars</div>
         </div>
-
-        <button class="btn-buy" onclick="handleOrder()">CONFIRM SECURE ORDER</button>
+        
+        <div class="price-tag"><span id="totalPrice">11.05</span> <span>TON</span></div>
+        
+        <button class="btn-buy" onclick="handleOrder()">CONFIRM PURCHASE</button>
+        
+        <div class="promo-badge">⚡️ FLASH SALE: 35% DISCOUNT APPLIED</div>
+        <p style="color: #4e5965; font-size: 10px; margin-top: 15px;">Market: <del>17.00 TON</del> | Verified Infrastructure</p>
     </div>
 
     <script>
-        let selectedPrice = 11.00;
-        let selectedAmount = 1000;
-        let isCustom = false;
-
         const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
             manifestUrl: 'https://acenumber0.github.io/telegram/tonconnect-manifest.json',
             buttonRootId: 'ton-connect'
         });
 
-        function selectPkg(id, price, amount) {
-            document.querySelectorAll('.package-item').forEach(i => i.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('customInput').classList.remove('error');
-            document.getElementById('amountError').style.display = 'none';
-            selectedPrice = price;
-            selectedAmount = amount;
-            isCustom = false;
-        }
-
-        function validateCustom() {
-            isCustom = true;
-            document.querySelectorAll('.package-item').forEach(i => i.classList.remove('active'));
-            let val = document.getElementById('customInput').value;
-            selectedAmount = val;
-            selectedPrice = val * 0.011; // سعر النجمة في الباقة الأساسية
+        function updatePrice() {
+            const stars = document.getElementById('starsInput').value;
+            const priceDisplay = document.getElementById('totalPrice');
+            const ratePerStar = 0.007366; // السعر التنافسي اللي اتفقنا عليه
+            let finalPrice = stars * ratePerStar;
+            priceDisplay.innerText = finalPrice.toFixed(2);
         }
 
         async function handleOrder() {
-            let user = document.getElementById('userInput').value;
-            let customVal = document.getElementById('customInput').value;
+            const user = document.getElementById('userInput');
+            const stars = document.getElementById('starsInput');
+            const userError = document.getElementById('userError');
+            const amountError = document.getElementById('amountError');
+            const mainCard = document.getElementById('mainCard');
+            
             let isValid = true;
 
             // التحقق من اليوزر
-            if (!user) {
-                document.getElementById('userInput').classList.add('error');
-                document.getElementById('userError').style.display = 'block';
+            if (!user.value.trim()) {
+                user.classList.add('error');
+                userError.style.display = 'block';
                 isValid = false;
             } else {
-                document.getElementById('userInput').classList.remove('error');
-                document.getElementById('userError').style.display = 'none';
+                user.classList.remove('error');
+                userError.style.display = 'none';
             }
 
-            // التحقق من الكمية (إذا كان يكتب يدوي)
-            if (isCustom && (customVal < 500 || !customVal)) {
-                document.getElementById('customInput').classList.add('error');
-                document.getElementById('amountError').style.display = 'block';
+            // التحقق من الكمية (أقل شيء 500)
+            if (stars.value < 500 || !stars.value) {
+                stars.classList.add('error');
+                amountError.style.display = 'block';
                 isValid = false;
-            } else if (isCustom) {
-                document.getElementById('customInput').classList.remove('error');
-                document.getElementById('amountError').style.display = 'none';
+            } else {
+                stars.classList.remove('error');
+                amountError.style.display = 'none';
             }
 
             if (!isValid) {
-                document.getElementById('mainCard').classList.add('shake');
-                setTimeout(() => document.getElementById('mainCard').classList.remove('shake'), 300);
+                mainCard.classList.add('shake');
+                setTimeout(() => mainCard.classList.remove('shake'), 300);
                 return;
             }
 
             if (!tonConnectUI.connected) {
-                alert("Security: Please connect your TON wallet to sign this transaction.");
+                alert("Security: Please connect your TON wallet to sign the order.");
                 return;
             }
 
-            // تنفيذ الدفع
-            const nanoAmount = Math.floor(selectedPrice * 1000000000).toString();
+            const finalPrice = stars.value * 0.007366;
+            const nanoAmount = Math.floor(finalPrice * 1000000000).toString();
+
             const transaction = {
                 validUntil: Math.floor(Date.now() / 1000) + 120, 
                 messages: [{
@@ -143,7 +126,7 @@
                 await tonConnectUI.sendTransaction(transaction);
                 alert("Blockchain Success: Asset delivery initiated.");
             } catch (e) {
-                alert("Transaction Error: Peer-to-peer verification failed.");
+                alert("Transaction Error: Verification failed. Check balance for gas fees.");
             }
         }
     </script>
