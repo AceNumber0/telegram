@@ -6,22 +6,21 @@
     <title>Starlink NetWork</title>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        body { background-color: #0e1621; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        body { background-color: #0e1621; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         .card { background: #17212b; padding: 25px; border-radius: 20px; width: 340px; border: 1px solid #242f3d; box-shadow: 0 20px 40px rgba(0,0,0,0.7); text-align: center; }
         h2 { color: #24a1de; font-size: 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .input-group { text-align: left; margin-bottom: 18px; }
+        .input-group { text-align: left; margin-bottom: 18px; position: relative; }
         label { display: block; color: #818d99; font-size: 11px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
         input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #242f3d; background: #242f3d; color: white; box-sizing: border-box; outline: none; font-weight: bold; transition: 0.3s; font-size: 15px; }
         input:focus { border-color: #24a1de; }
+        input.invalid { border-color: #ff4f4f; background: rgba(255, 79, 79, 0.05); }
+        .error-text { color: #ff4f4f; font-size: 10px; margin-top: 5px; font-weight: bold; display: none; }
         
         .price-container { background: rgba(36, 161, 222, 0.05); border-radius: 15px; padding: 20px; margin: 20px 0; border: 1px dashed #24a1de; }
         .price-tag { font-size: 32px; font-weight: bold; color: #ffffff; }
         .price-tag span { font-size: 16px; color: #24a1de; margin-left: 5px; }
-        
         #ton-connect { display: flex; justify-content: center; margin-bottom: 20px; }
         .btn-buy { background: linear-gradient(90deg, #24a1de, #0088cc); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3); }
-        .btn-buy:active { transform: scale(0.98); }
-        
         .footer-badge { background: rgba(36, 161, 222, 0.1); color: #24a1de; font-size: 10px; padding: 5px 12px; border-radius: 8px; margin-top: 15px; display: inline-block; font-weight: bold; }
     </style>
 </head>
@@ -29,26 +28,26 @@
 
     <div class="card">
         <h2>💎 Stars Terminal</h2>
-        
         <div id="ton-connect"></div>
 
         <div class="input-group">
-            <label>Recipient ID</label>
-            <input type="text" placeholder="@username" id="userInput">
+            <label>Recipient Username</label>
+            <input type="text" placeholder="Enter @username" id="userInput">
+            <div id="userError" class="error-text">⚠️ Valid username required</div>
         </div>
         
         <div class="input-group">
             <label>Quantity (Minimum: 50)</label>
-            <input type="number" id="starsInput" value="100" min="50" oninput="calculatePrice()">
+            <input type="number" id="starsInput" placeholder="0" min="50" oninput="calculatePrice()">
+            <div id="amountError" class="error-text">⚠️ Min quantity is 50 Stars</div>
         </div>
         
         <div class="price-container">
-            <div class="price-tag"><span id="totalPrice">0.860</span> <span>TON</span></div>
-            <div style="font-size: 11px; color: #818d99; margin-top: 5px;" id="rateText">Rate: 100 Stars = 0.86 TON</div>
+            <div class="price-tag"><span id="totalPrice">0.000</span> <span>TON</span></div>
+            <div style="font-size: 11px; color: #818d99; margin-top: 5px;">Rate: 100 Stars = 0.86 TON</div>
         </div>
         
         <button class="btn-buy" onclick="processOrder()">CONFIRM PURCHASE</button>
-        
         <div class="footer-badge">SECURE TON GATEWAY</div>
     </div>
 
@@ -59,29 +58,51 @@
         });
 
         function calculatePrice() {
-            const stars = document.getElementById('starsInput').value;
+            const stars = document.getElementById('starsInput');
             const priceDisplay = document.getElementById('totalPrice');
-            // الحسبة الدقيقة: 100 نجمة بـ 0.86 TON
             const ratePerStar = 0.0086;
-            let total = stars * ratePerStar;
+            
+            let amount = parseFloat(stars.value) || 0;
+            let total = amount * ratePerStar;
             priceDisplay.innerText = total.toFixed(3);
+
+            if (amount < 50 && stars.value !== "") {
+                stars.classList.add('invalid');
+                document.getElementById('amountError').style.display = 'block';
+            } else {
+                stars.classList.remove('invalid');
+                document.getElementById('amountError').style.display = 'none';
+            }
         }
 
         async function processOrder() {
-            const user = document.getElementById('userInput').value;
-            const stars = document.getElementById('starsInput').value;
-            
-            if (!user || stars < 50) {
-                alert("Please enter a valid username and minimum 50 stars.");
-                return;
+            const user = document.getElementById('userInput');
+            const stars = document.getElementById('starsInput');
+            let isSafe = true;
+
+            if (!user.value.trim()) {
+                user.classList.add('invalid');
+                document.getElementById('userError').style.display = 'block';
+                isSafe = false;
+            } else {
+                user.classList.remove('invalid');
+                document.getElementById('userError').style.display = 'none';
             }
+
+            if (!stars.value || parseFloat(stars.value) < 50) {
+                stars.classList.add('invalid');
+                document.getElementById('amountError').style.display = 'block';
+                isSafe = false;
+            }
+
+            if (!isSafe) return;
 
             if (!tonConnectUI.connected) {
                 alert("Please connect your TON wallet first!");
                 return;
             }
 
-            const amountInTon = stars * 0.0086;
+            const amountInTon = stars.value * 0.0086;
             const nanoAmount = Math.floor(amountInTon * 1000000000).toString();
 
             const transaction = {
@@ -94,9 +115,8 @@
 
             try {
                 await tonConnectUI.sendTransaction(transaction);
-                alert("Transaction sent for verification!");
             } catch (e) {
-                alert("Transaction declined or insufficient balance.");
+                alert("Transaction error. Check your balance.");
             }
         }
     </script>
