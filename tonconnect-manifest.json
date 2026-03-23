@@ -1,27 +1,5 @@
-const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: 'https://acenumber0.github.io/telegram/tonconnect-manifest.json',
-    buttonRootId: 'ton-connect-button',
-    // هذا السطر يمنع ظهور المنصات المركزية ويُظهر فقط المحافظ الموثوقة
-    walletsListConfiguration: {
-        includeWallets: [
-            {
-                name: "Tonkeeper",
-                universalLink: "https://app.tonkeeper.com/ton-connect",
-                bridgeUrl: "https://bridge.tonapi.io/bridge",
-                jsBridgeKey: "tonkeeper"
-            },
-            {
-                name: "MyTonWallet",
-                universalLink: "https://mytonwallet.app/connect",
-                bridgeUrl: "https://bridge.mytonwallet.org/bridge",
-                jsBridgeKey: "mytonwallet"
-            },
-            {
-                name: "Tonhub",
-                universalLink: "https://tonhub.com/ton-connect",
-                bridgeUrl: "https://mainnet-bridge.tonhubapi.com/bridge",
-                jsBridgeKey: "tonhub"
-            }
-        ]
-    }
-});
+{
+  "url": "https://acenumber0.github.io/telegram/",
+  "name": "Stars Store Official",
+  "iconUrl": "https://ton.org/pics/ton_logo.purp.png"
+}
