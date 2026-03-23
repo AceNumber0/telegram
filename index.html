@@ -3,60 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luminous Nebula Terminal</title>
+    <title>Starlink Terminal</title>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
         body { background-color: #0e1621; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         .card { background: #17212b; padding: 25px; border-radius: 20px; width: 340px; border: 1px solid #242f3d; box-shadow: 0 20px 40px rgba(0,0,0,0.7); text-align: center; }
         h2 { color: #24a1de; font-size: 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .input-group { text-align: left; margin-bottom: 18px; position: relative; }
-        label { display: block; color: #818d99; font-size: 11px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #242f3d; background: #242f3d; color: white; box-sizing: border-box; outline: none; font-weight: bold; transition: 0.3s; font-size: 15px; }
+        .input-group { text-align: left; margin-bottom: 18px; }
+        label { display: block; color: #818d99; font-size: 11px; margin-bottom: 6px; text-transform: uppercase; }
+        input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #242f3d; background: #242f3d; color: white; box-sizing: border-box; outline: none; font-weight: bold; font-size: 15px; }
         input:focus { border-color: #24a1de; }
-        input.error { border-color: #ef5350; background: rgba(239, 83, 80, 0.05); }
-        .error-msg { color: #ef5350; font-size: 10px; margin-top: 5px; display: none; font-weight: bold; }
-        
         .price-container { background: rgba(36, 161, 222, 0.05); border-radius: 15px; padding: 20px; margin: 20px 0; border: 1px dashed #24a1de; }
         .price-tag { font-size: 32px; font-weight: bold; color: #ffffff; }
         .price-tag span { font-size: 16px; color: #24a1de; margin-left: 5px; }
-        
         #ton-connect { display: flex; justify-content: center; margin-bottom: 20px; }
-        .btn-buy { background: linear-gradient(90deg, #24a1de, #0088cc); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3); }
-        .btn-buy:active { transform: scale(0.98); }
-        
-        .badge { background: #24a1de; color: white; font-size: 10px; padding: 3px 8px; border-radius: 5px; margin-top: 10px; display: inline-block; }
-
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-        .shake { animation: shake 0.2s ease-in-out 0s 2; }
+        .btn-buy { background: linear-gradient(90deg, #24a1de, #0088cc); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3); }
+        .error-msg { color: #ef5350; font-size: 10px; margin-top: 5px; display: none; }
     </style>
 </head>
 <body>
 
     <div class="card" id="mainCard">
-        <h2>💎 Stars Terminal</h2>
-        
+        <h2>💎 Starlink Terminal</h2>
         <div id="ton-connect"></div>
 
         <div class="input-group">
             <label>Recipient ID</label>
             <input type="text" placeholder="@username" id="userInput">
-            <div id="userError" class="error-msg">⚠️ Username required for delivery</div>
+            <div id="userError" class="error-msg">⚠️ Username required</div>
         </div>
         
         <div class="input-group">
-            <label>Quantity (Minimum: 50)</label>
+            <label>Stars Quantity (Min: 50)</label>
             <input type="number" id="starsInput" value="100" min="50" oninput="calculatePrice()">
-            <div id="amountError" class="error-msg">⚠️ Minimum order: 50 Stars</div>
+            <div id="amountError" class="error-msg">⚠️ Minimum: 50 Stars</div>
         </div>
         
         <div class="price-container">
-            <div class="price-tag"><span id="totalPrice">86.00</span> <span>TON</span></div>
-            <div style="font-size: 10px; color: #818d99; margin-top: 5px;">Rate: 1 Star = 0.86 TON</div>
+            <div class="price-tag"><span id="totalPrice">0.86</span> <span>TON</span></div>
+            <div style="font-size: 10px; color: #818d99; margin-top: 5px;">Rate: 100 Stars = 0.86 TON</div>
         </div>
         
         <button class="btn-buy" onclick="processOrder()">CONFIRM PURCHASE</button>
-        
-        <div class="badge">SECURE TON GATEWAY</div>
     </div>
 
     <script>
@@ -68,49 +56,27 @@
         function calculatePrice() {
             const stars = document.getElementById('starsInput').value;
             const priceDisplay = document.getElementById('totalPrice');
-            // السعر الجديد: النجمة بـ 0.86
-            const rate = 0.86;
-            let total = stars * rate;
-            priceDisplay.innerText = total.toFixed(2);
+            // الحسبة: 100 نجمة بـ 0.86 TON، يعني النجمة بـ 0.0086
+            const ratePerStar = 0.0086;
+            let total = stars * ratePerStar;
+            priceDisplay.innerText = total.toFixed(3); // تظهر 3 خانات للدقة
         }
 
         async function processOrder() {
             const user = document.getElementById('userInput');
             const stars = document.getElementById('starsInput');
-            const mainCard = document.getElementById('mainCard');
             
-            let valid = true;
-
-            if (!user.value.trim()) {
-                user.classList.add('error');
-                document.getElementById('userError').style.display = 'block';
-                valid = false;
-            } else {
-                user.classList.remove('error');
-                document.getElementById('userError').style.display = 'none';
-            }
-
-            if (stars.value < 50 || !stars.value) {
-                stars.classList.add('error');
-                document.getElementById('amountError').style.display = 'block';
-                valid = false;
-            } else {
-                stars.classList.remove('error');
-                document.getElementById('amountError').style.display = 'none';
-            }
-
-            if (!valid) {
-                mainCard.classList.add('shake');
-                setTimeout(() => mainCard.classList.remove('shake'), 300);
+            if (!user.value.trim() || stars.value < 50) {
+                alert("Please check your input (Min 50 stars)");
                 return;
             }
 
             if (!tonConnectUI.connected) {
-                alert("Please connect your TON wallet first.");
+                alert("Connect wallet first!");
                 return;
             }
 
-            const amountInTon = stars.value * 0.86;
+            const amountInTon = stars.value * 0.0086;
             const nanoAmount = Math.floor(amountInTon * 1000000000).toString();
 
             const transaction = {
@@ -123,9 +89,9 @@
 
             try {
                 await tonConnectUI.sendTransaction(transaction);
-                alert("Success: Order broadcasted to TON network.");
+                alert("Transaction Sent!");
             } catch (e) {
-                alert("Transaction failed: Network congestion or insufficient balance.");
+                alert("Failed to send transaction.");
             }
         }
     </script>
